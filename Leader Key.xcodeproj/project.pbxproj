@@ -32,6 +32,7 @@
 		427C184D2BD65C5C00955B98 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C184C2BD65C5C00955B98 /* Defaults.swift */; };
 		427C18502BD6652500955B98 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C184F2BD6652500955B98 /* Util.swift */; };
 		427C18542BD6E59300955B98 /* NSWindow+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C18532BD6E59300955B98 /* NSWindow+Animations.swift */; };
+		42A0CE822D2D226800879029 /* ConfigEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A0CE812D2D226800879029 /* ConfigEditorView.swift */; };
 		42E70A572C823FF200FCF902 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 42E70A562C823FF200FCF902 /* Sparkle */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		427C184C2BD65C5C00955B98 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		427C184F2BD6652500955B98 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		427C18532BD6E59300955B98 /* NSWindow+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+Animations.swift"; sourceTree = "<group>"; };
+		42A0CE812D2D226800879029 /* ConfigEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigEditorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +195,7 @@
 		427C18392BD3268000955B98 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				42A0CE812D2D226800879029 /* ConfigEditorView.swift */,
 				427C182C2BD31F9500955B98 /* Settings.swift */,
 				427C18372BD3262100955B98 /* VisualEffectBackground.swift */,
 				427C18302BD3209C00955B98 /* MainView.swift */,
@@ -278,7 +281,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					427C17E62BD311B400955B98 = {
 						CreatedOnToolsVersion = 15.3;
@@ -305,7 +308,7 @@
 			packageReferences = (
 				427C18152BD311EC00955B98 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				427C18182BD3123C00955B98 /* XCRemoteSwiftPackageReference "Defaults" */,
-				427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Preferences" */,
+				427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Settings" */,
 				4279AFE92C6A070300952A83 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4279AFEB2C6A175500952A83 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 			);
@@ -361,6 +364,7 @@
 				427C183B2BD329F900955B98 /* UserConfig.swift in Sources */,
 				427C18542BD6E59300955B98 /* NSWindow+Animations.swift in Sources */,
 				427C18282BD31E2E00955B98 /* GeneralPane.swift in Sources */,
+				42A0CE822D2D226800879029 /* ConfigEditorView.swift in Sources */,
 				427C182F2BD3206200955B98 /* UserState.swift in Sources */,
 				427C18482BD5B3FD00955B98 /* FileMonitor.swift in Sources */,
 				427C18202BD31C3D00955B98 /* AppDelegate.swift in Sources */,
@@ -551,7 +555,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.brnbw.Leader-Key";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -588,7 +592,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.brnbw.Leader-Key";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -600,7 +604,6 @@
 		427C18102BD311B500955B98 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 26;
@@ -620,7 +623,6 @@
 		427C18112BD311B500955B98 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 26;
@@ -640,7 +642,6 @@
 		427C18132BD311B500955B98 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 26;
 				DEAD_CODE_STRIPPING = YES;
@@ -658,7 +659,6 @@
 		427C18142BD311B500955B98 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 26;
 				DEAD_CODE_STRIPPING = YES;
@@ -747,9 +747,9 @@
 				minimumVersion = 8.2.0;
 			};
 		};
-		427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Preferences" */ = {
+		427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Settings" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/Preferences";
+			repositoryURL = "https://github.com/sindresorhus/Settings";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 3.1.0;
@@ -775,7 +775,7 @@
 		};
 		427C18222BD31DF100955B98 /* Settings */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Preferences" */;
+			package = 427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Settings" */;
 			productName = Settings;
 		};
 		42E70A562C823FF200FCF902 /* Sparkle */ = {

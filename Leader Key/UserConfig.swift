@@ -97,13 +97,32 @@ class UserConfig: ObservableObject {
     loadConfig()
     afterReload?(true)
   }
+
+  func saveConfig() {
+    // Stop monitoring temporarily
+    fileMonitor.stopMonitoring()
+    
+    do {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        let jsonData = try encoder.encode(root)
+        try jsonData.write(to: fileURL())
+    } catch {
+        print("Error saving config: \(error)")
+        handleConfigError(error)
+    }
+    
+    // Resume monitoring
+    reloadConfig()
+    startWatching()
+  }
 }
 
 let defaultConfig = """
   {
       "type": "group",
       "actions": [
-          { "key": "t", "type": "application", "value": "/Applications/Utilities/Terminal.app" },
+          { "key": "t", "type": "application", "value": "/System/Applications/Utilities/Terminal.app" },
           {
               "key": "o",
               "type": "group",
@@ -176,6 +195,7 @@ enum ActionOrGroup: Codable {
       try container.encode(action.value, forKey: .value)
     case let .group(group):
       try container.encode(group.key, forKey: .key)
+      try container.encode(Type.group, forKey: .type)
       try container.encode(group.actions, forKey: .actions)
     }
   }
