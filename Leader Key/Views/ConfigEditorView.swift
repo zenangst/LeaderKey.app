@@ -21,37 +21,32 @@ struct AddButtons: View {
   }
 }
 
-struct ConfigEditorView: View {
+struct GroupContentView: View {
   @Binding var group: Group
-  var isRoot: Bool = true
+  var isRoot: Bool = false
 
   var body: some View {
-    ScrollView {
-      VStack(spacing: PADDING) {
-        ForEach(Array(group.actions.enumerated()), id: \.offset) {
-          index, item in
-          ActionOrGroupRow(
-            item: binding(for: index),
-            onDelete: { group.actions.remove(at: index) }
-          )
-        }
-
-        if isRoot {
-          VStack {
-            AddButtons(
-              onAddAction: {
-                group.actions.append(
-                  .action(Action(key: "", type: .application, value: "")))
-              },
-              onAddGroup: {
-                group.actions.append(.group(Group(key: "", actions: [])))
-              }
-            )
-          }.padding(.top, PADDING * 0.5)
-        }
+    VStack(spacing: PADDING) {
+      ForEach(Array(group.actions.enumerated()), id: \.offset) {
+        index, item in
+        ActionOrGroupRow(
+          item: binding(for: index),
+          onDelete: { group.actions.remove(at: index) }
+        )
       }
-    }.padding(
-      .init(top: PADDING, leading: PADDING, bottom: PADDING, trailing: 0))
+
+      VStack {
+        AddButtons(
+          onAddAction: {
+            group.actions.append(
+              .action(Action(key: "", type: .application, value: "")))
+          },
+          onAddGroup: {
+            group.actions.append(.group(Group(key: "", actions: [])))
+          }
+        )
+      }.padding(.top, PADDING * 0.5)
+    }
   }
 
   private func binding(for index: Int) -> Binding<ActionOrGroup> {
@@ -59,6 +54,18 @@ struct ConfigEditorView: View {
       get: { group.actions[index] },
       set: { group.actions[index] = $0 }
     )
+  }
+}
+
+struct ConfigEditorView: View {
+  @Binding var group: Group
+  var isRoot: Bool = true
+
+  var body: some View {
+    ScrollView {
+      GroupContentView(group: $group, isRoot: isRoot)
+        .padding(.init(top: PADDING, leading: PADDING, bottom: PADDING, trailing: 0))
+    }
   }
 }
 
@@ -129,13 +136,9 @@ struct ActionRow: View {
 
       TextField("Value", text: $action.value)
 
-      Spacer(minLength: 0)
-
-      Button(action: onDelete) {
-        Image(systemName: "trash").foregroundColor(.red)
+      Button(role: .destructive, action: onDelete) {
+        Image(systemName: "trash")
       }
-      .controlSize(.small)
-      .buttonStyle(.borderless)
       .padding(.trailing, PADDING)
     }
   }
@@ -170,12 +173,9 @@ struct GroupRow: View {
 
         Spacer(minLength: 0)
 
-        Button(action: onDelete) {
+        Button(role: .destructive, action: onDelete) {
           Image(systemName: "trash")
-            .foregroundColor(.red)
         }
-        .controlSize(.small)
-        .buttonStyle(.borderless)
         .padding(.trailing, PADDING)
       }
 
@@ -187,22 +187,8 @@ struct GroupRow: View {
             .padding(.leading, PADDING)
             .padding(.trailing, PADDING / 3)
 
-          VStack(spacing: 0) {
-            ConfigEditorView(group: $group, isRoot: false)
-
-            VStack {
-              AddButtons(
-                onAddAction: {
-                  group.actions.append(
-                    .action(Action(key: "", type: .application, value: "")))
-                },
-                onAddGroup: {
-                  group.actions.append(.group(Group(key: "", actions: [])))
-                }
-              )
-            }
+          GroupContentView(group: $group)
             .padding(.leading, PADDING)
-          }
         }
       }
     }

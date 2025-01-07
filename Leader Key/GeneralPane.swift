@@ -17,13 +17,14 @@ struct GeneralPane: View {
             ConfigEditorView(group: $config.root)
               .frame(height: 400)
           }
+          .padding(8)
           .overlay(
             RoundedRectangle(cornerRadius: 12)
               .inset(by: 1)
-              .stroke(Color.gray, lineWidth: 1)
+              .stroke(Color.primary, lineWidth: 1)
+              .opacity(0.1)
           )
 
-          
           HStack {
             Button("Save") {
               config.saveConfig()
@@ -56,4 +57,3 @@ struct GeneralPane_Previews: PreviewProvider {
       .environmentObject(config)
   }
 }
-
