@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23504"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -17,6 +17,15 @@
                                     <items>
                                         <menuItem title="About Leader Key" id="Tid-6l-4eG">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontStandardAboutPanel:" target="YWy-cA-2k4" id="Tid-6l-4eH"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Check for Updates..." id="Tid-6l-4eI">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="checkForUpdates:" target="a9v-SW-eUR" id="Tid-6l-4eJ"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="TjY-mM-ffa"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="wn1-K1-Ku7">
@@ -377,7 +386,11 @@
                 </application>
                 <customObject id="elY-qP-5N9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="a9v-SW-eUR" customClass="SPUStandardUpdaterController"/>
-                <customObject id="7H0-Ae-Klq" customClass="AppDelegate" customModule="Leader_Key" customModuleProvider="target"/>
+                <customObject id="7H0-Ae-Klq" customClass="AppDelegate" customModule="Leader_Key" customModuleProvider="target">
+                    <connections>
+                        <outlet property="updaterController" destination="a9v-SW-eUR" id="Btm-Xz-fyD"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>

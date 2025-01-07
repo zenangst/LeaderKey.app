@@ -2,6 +2,7 @@ import Cocoa
 import KeyboardShortcuts
 import Settings
 import SwiftUI
+import Sparkle
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -12,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let config = UserConfig()
 
   var state: UserState!
+  @IBOutlet var updaterController: SPUStandardUpdaterController!
 
   lazy var settingsWindowController = SettingsWindowController(
     panes: [
@@ -51,6 +53,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     statusItem.handleRevealConfig = {
       NSWorkspace.shared.activateFileViewerSelecting([self.config.fileURL()])
+    }
+    statusItem.handleCheckForUpdates = {
+      self.updaterController.checkForUpdates(nil)
     }
     statusItem.enable()
 
