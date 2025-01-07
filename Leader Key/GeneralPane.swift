@@ -26,11 +26,15 @@ struct GeneralPane: View {
           )
 
           HStack {
-            Button("Save") {
+            Button("Save to file") {
               config.saveConfig()
             }
+            
+            Button("Reload from file") {
+              config.reloadConfig()
+            }
 
-            Button("Reveal in Finder") {
+            Button("Reveal config file in Finder") {
               NSWorkspace.shared.activateFileViewerSelecting([config.fileURL()])
             }
           }
@@ -50,10 +54,7 @@ struct GeneralPane: View {
 
 struct GeneralPane_Previews: PreviewProvider {
   static var previews: some View {
-    let config = UserConfig()
-    try? config.bootstrapConfig()
-
     return GeneralPane()
-      .environmentObject(config)
+      .environmentObject(UserConfig())
   }
 }
