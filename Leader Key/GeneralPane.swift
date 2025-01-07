@@ -9,11 +9,21 @@ struct GeneralPane: View {
 
   var body: some View {
     Settings.Container(contentWidth: contentWidth) {
-      Settings.Section(title: "Config", bottomDivider: true, verticalAlignment: .top) {
+      Settings.Section(
+        title: "Config", bottomDivider: true, verticalAlignment: .top
+      ) {
         VStack(alignment: .leading) {
-          ConfigEditorView(group: $config.root)
-            .frame(height: 400)
+          VStack {
+            ConfigEditorView(group: $config.root)
+              .frame(height: 400)
+          }
+          .overlay(
+            RoundedRectangle(cornerRadius: 12)
+              .inset(by: 1)
+              .stroke(Color.gray, lineWidth: 1)
+          )
 
+          
           HStack {
             Button("Save") {
               config.saveConfig()
@@ -25,7 +35,7 @@ struct GeneralPane: View {
           }
         }
       }
-      
+
       Settings.Section(title: "Shortcut") {
         KeyboardShortcuts.Recorder(for: .activate)
       }
@@ -41,8 +51,9 @@ struct GeneralPane_Previews: PreviewProvider {
   static var previews: some View {
     let config = UserConfig()
     try? config.bootstrapConfig()
-    
+
     return GeneralPane()
       .environmentObject(config)
   }
 }
+

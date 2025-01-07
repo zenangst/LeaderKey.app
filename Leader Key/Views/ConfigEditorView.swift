@@ -1,13 +1,21 @@
 import SwiftUI
 
+let PADDING: CGFloat = 8
+
 struct AddButtons: View {
   let onAddAction: () -> Void
   let onAddGroup: () -> Void
 
   var body: some View {
-    HStack(spacing: 8) {
-      Button("Add Action", action: onAddAction)
-      Button("Add Group", action: onAddGroup)
+    HStack(spacing: PADDING) {
+      Button(action: onAddAction) {
+        Image(systemName: "rays")
+        Text("Add action")
+      }
+      Button(action: onAddGroup) {
+        Image(systemName: "folder")
+        Text("Add group")
+      }
       Spacer()
     }
   }
@@ -19,7 +27,7 @@ struct ConfigEditorView: View {
 
   var body: some View {
     ScrollView {
-      VStack(spacing: 8) {
+      VStack(spacing: PADDING) {
         ForEach(Array(group.actions.enumerated()), id: \.offset) {
           index, item in
           ActionOrGroupRow(
@@ -29,20 +37,21 @@ struct ConfigEditorView: View {
         }
 
         if isRoot {
-          Divider()
-
-          AddButtons(
-            onAddAction: {
-              group.actions.append(
-                .action(Action(key: "", type: .application, value: "")))
-            },
-            onAddGroup: {
-              group.actions.append(.group(Group(key: "", actions: [])))
-            }
-          )
+          VStack {
+            AddButtons(
+              onAddAction: {
+                group.actions.append(
+                  .action(Action(key: "", type: .application, value: "")))
+              },
+              onAddGroup: {
+                group.actions.append(.group(Group(key: "", actions: [])))
+              }
+            )
+          }.padding(.top, PADDING * 0.5)
         }
       }
-    }
+    }.padding(
+      .init(top: PADDING, leading: PADDING, bottom: PADDING, trailing: 0))
   }
 
   private func binding(for index: Int) -> Binding<ActionOrGroup> {
@@ -92,7 +101,7 @@ struct ActionRow: View {
   let onDelete: () -> Void
 
   var body: some View {
-    HStack(spacing: 8) {
+    HStack(spacing: PADDING) {
       TextField("Key", text: $action.key)
         .frame(width: 32)
         .textFieldStyle(.roundedBorder)
@@ -123,11 +132,11 @@ struct ActionRow: View {
       Spacer(minLength: 0)
 
       Button(action: onDelete) {
-        Image(systemName: "trash")
-          .foregroundColor(.red)
+        Image(systemName: "trash").foregroundColor(.red)
       }
       .controlSize(.small)
-        .buttonStyle(.borderless)
+      .buttonStyle(.borderless)
+      .padding(.trailing, PADDING)
     }
   }
 }
@@ -138,8 +147,8 @@ struct GroupRow: View {
   let onDelete: () -> Void
 
   var body: some View {
-    VStack(spacing: 8) {
-      HStack(spacing: 8) {
+    VStack(spacing: PADDING) {
+      HStack(spacing: PADDING) {
         TextField(
           "Group Key",
           text: Binding(
@@ -150,15 +159,6 @@ struct GroupRow: View {
         .frame(width: 32)
         .textFieldStyle(.roundedBorder)
 
-        Picker("Type", selection: $group.type) {
-          Text("Group").tag(Type.group)
-        }
-        .frame(width: 110)
-        .labelsHidden()
-        .disabled(true)
-        
-        Spacer(minLength: 2)
-
         Image(systemName: "chevron.right")
           .rotationEffect(.degrees(isExpanded ? 90 : 0))
           .onTapGesture {
@@ -166,17 +166,7 @@ struct GroupRow: View {
               isExpanded.toggle()
             }
           }
-        Spacer(minLength: 2)
-
-        AddButtons(
-          onAddAction: {
-            group.actions.append(
-              .action(Action(key: "", type: .application, value: "")))
-          },
-          onAddGroup: {
-            group.actions.append(.group(Group(key: "", actions: [])))
-          }
-        )
+          .padding(.leading, PADDING / 3)
 
         Spacer(minLength: 0)
 
@@ -185,12 +175,35 @@ struct GroupRow: View {
             .foregroundColor(.red)
         }
         .controlSize(.small)
-          .buttonStyle(.borderless)
+        .buttonStyle(.borderless)
+        .padding(.trailing, PADDING)
       }
 
       if isExpanded {
-        ConfigEditorView(group: $group, isRoot: false)
-          .padding(.leading, 23)
+        HStack(spacing: 0) {
+          Rectangle()
+            .fill(Color.gray.opacity(0.2))
+            .frame(width: 1)
+            .padding(.leading, PADDING)
+            .padding(.trailing, PADDING / 3)
+
+          VStack(spacing: 0) {
+            ConfigEditorView(group: $group, isRoot: false)
+
+            VStack {
+              AddButtons(
+                onAddAction: {
+                  group.actions.append(
+                    .action(Action(key: "", type: .application, value: "")))
+                },
+                onAddGroup: {
+                  group.actions.append(.group(Group(key: "", actions: [])))
+                }
+              )
+            }
+            .padding(.leading, PADDING)
+          }
+        }
       }
     }
     .padding(.horizontal, 0)
