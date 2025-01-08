@@ -101,17 +101,17 @@ class UserConfig: ObservableObject {
   func saveConfig() {
     // Stop monitoring temporarily
     fileMonitor.stopMonitoring()
-    
+
     do {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        let jsonData = try encoder.encode(root)
-        try jsonData.write(to: fileURL())
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+      let jsonData = try encoder.encode(root)
+      try jsonData.write(to: fileURL())
     } catch {
-        print("Error saving config: \(error)")
-        handleConfigError(error)
+      print("Error saving config: \(error)")
+      handleConfigError(error)
     }
-    
+
     // Resume monitoring
     reloadConfig()
     startWatching()
@@ -150,6 +150,7 @@ enum Type: String, Codable {
   case group
   case application
   case url
+  case command
 }
 
 struct Action: Codable {

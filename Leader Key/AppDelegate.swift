@@ -1,8 +1,8 @@
 import Cocoa
 import KeyboardShortcuts
 import Settings
-import SwiftUI
 import Sparkle
+import SwiftUI
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {

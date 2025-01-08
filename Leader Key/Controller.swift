@@ -80,6 +80,8 @@ class Controller {
     case .url:
       NSWorkspace.shared.open(
         URL(string: action.value)!, configuration: DontActivateConfiguration.shared.configuration)
+    case .command:
+      CommandRunner.run(action.value)
     default:
       print("\(action.type) unknown")
     }

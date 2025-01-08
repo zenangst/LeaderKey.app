@@ -29,7 +29,7 @@ struct GeneralPane: View {
             Button("Save to file") {
               config.saveConfig()
             }
-            
+
             Button("Reload from file") {
               config.reloadConfig()
             }

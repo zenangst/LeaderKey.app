@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		426E625B2D2E6A98009FD2F2 /* CommandRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 426E625A2D2E6A98009FD2F2 /* CommandRunner.swift */; };
 		4279AFED2C6A175500952A83 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4279AFEC2C6A175500952A83 /* LaunchAtLogin */; };
 		427C17EF2BD311B500955B98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C17EE2BD311B500955B98 /* Assets.xcassets */; };
 		427C17F22BD311B500955B98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 427C17F12BD311B500955B98 /* Preview Assets.xcassets */; };
@@ -54,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		426E625A2D2E6A98009FD2F2 /* CommandRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandRunner.swift; sourceTree = "<group>"; };
 		4279AFEA2C6A08B100952A83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Leader Key/Support/Info.plist"; sourceTree = SOURCE_ROOT; };
 		427C17E72BD311B400955B98 /* Leader Key.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Leader Key.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		427C17EE2BD311B500955B98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,15 +140,16 @@
 			isa = PBXGroup;
 			children = (
 				427C181F2BD31C3D00955B98 /* AppDelegate.swift */,
-				427C18262BD31E2E00955B98 /* StatusItem.swift */,
-				427C183A2BD329F900955B98 /* UserConfig.swift */,
-				427C182E2BD3206200955B98 /* UserState.swift */,
+				426E625A2D2E6A98009FD2F2 /* CommandRunner.swift */,
 				427C181B2BD314B500955B98 /* Constants.swift */,
 				427C18272BD31E2E00955B98 /* Controller.swift */,
 				427C184C2BD65C5C00955B98 /* Defaults.swift */,
 				427C18472BD5B3FD00955B98 /* FileMonitor.swift */,
 				427C18242BD31E2E00955B98 /* GeneralPane.swift */,
 				427C18532BD6E59300955B98 /* NSWindow+Animations.swift */,
+				427C18262BD31E2E00955B98 /* StatusItem.swift */,
+				427C183A2BD329F900955B98 /* UserConfig.swift */,
+				427C182E2BD3206200955B98 /* UserState.swift */,
 				427C184F2BD6652500955B98 /* Util.swift */,
 				427C18252BD31E2E00955B98 /* Window.swift */,
 				427C17EE2BD311B500955B98 /* Assets.xcassets */,
@@ -359,6 +362,7 @@
 				427C184D2BD65C5C00955B98 /* Defaults.swift in Sources */,
 				427C18292BD31E2E00955B98 /* Window.swift in Sources */,
 				427C182D2BD31F9500955B98 /* Settings.swift in Sources */,
+				426E625B2D2E6A98009FD2F2 /* CommandRunner.swift in Sources */,
 				427C18382BD3262100955B98 /* VisualEffectBackground.swift in Sources */,
 				427C18312BD3209C00955B98 /* MainView.swift in Sources */,
 				427C183B2BD329F900955B98 /* UserConfig.swift in Sources */,

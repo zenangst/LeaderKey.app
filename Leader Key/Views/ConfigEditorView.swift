@@ -116,6 +116,7 @@ struct ActionRow: View {
       Picker("Type", selection: $action.type) {
         Text("Application").tag(Type.application)
         Text("URL").tag(Type.url)
+        Text("Command").tag(Type.command)
       }
       .frame(width: 110)
       .labelsHidden()
