@@ -117,6 +117,7 @@ struct ActionRow: View {
         Text("Application").tag(Type.application)
         Text("URL").tag(Type.url)
         Text("Command").tag(Type.command)
+        Text("Folder").tag(Type.folder)
       }
       .frame(width: 110)
       .labelsHidden()
@@ -128,6 +129,17 @@ struct ActionRow: View {
           panel.canChooseDirectories = false
           panel.canChooseFiles = true
           panel.allowedContentTypes = [.application]
+
+          if panel.runModal() == .OK {
+            action.value = panel.url?.path ?? ""
+          }
+        }
+      } else if action.type == .folder {
+        Button("Choose...") {
+          let panel = NSOpenPanel()
+          panel.allowsMultipleSelection = false
+          panel.canChooseDirectories = true
+          panel.canChooseFiles = false
 
           if panel.runModal() == .OK {
             action.value = panel.url?.path ?? ""

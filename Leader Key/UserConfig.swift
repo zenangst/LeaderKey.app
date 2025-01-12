@@ -151,6 +151,7 @@ enum Type: String, Codable {
   case application
   case url
   case command
+  case folder
 }
 
 struct Action: Codable {

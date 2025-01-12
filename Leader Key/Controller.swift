@@ -82,6 +82,8 @@ class Controller {
         URL(string: action.value)!, configuration: DontActivateConfiguration.shared.configuration)
     case .command:
       CommandRunner.run(action.value)
+    case .folder:
+      NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: action.value)
     default:
       print("\(action.type) unknown")
     }
