@@ -22,8 +22,6 @@ Watch the intro video on YouTube:
 - `[leader][m][m]` → Mute audio (`media mute`)
 - `[leader][w][m]` → Maximize current window (`window maximize`)
 
-```
-
 ## License
 
 MIT
