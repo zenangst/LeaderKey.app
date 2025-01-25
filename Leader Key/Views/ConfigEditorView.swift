@@ -102,12 +102,11 @@ struct ActionOrGroupRow: View {
 struct ActionRow: View {
   @Binding var action: Action
   let onDelete: () -> Void
+  @FocusState private var isKeyFocused: Bool
 
   var body: some View {
     HStack(spacing: PADDING) {
-      TextField("Key", text: $action.key)
-        .frame(width: 32)
-        .textFieldStyle(.roundedBorder)
+      KeyField(text: $action.key, placeholder: "Key")
 
       Picker("Type", selection: $action.type) {
         Text("Application").tag(Type.application)
@@ -156,20 +155,19 @@ struct ActionRow: View {
 struct GroupRow: View {
   @Binding var group: Group
   @State private var isExpanded = true
+  @FocusState private var isKeyFocused: Bool
   let onDelete: () -> Void
 
   var body: some View {
     VStack(spacing: PADDING) {
       HStack(spacing: PADDING) {
-        TextField(
-          "Group Key",
+        KeyField(
           text: Binding(
             get: { group.key ?? "" },
             set: { group.key = $0 }
-          )
+          ),
+          placeholder: "Group Key"
         )
-        .frame(width: 32)
-        .textFieldStyle(.roundedBorder)
 
         Image(systemName: "chevron.right")
           .rotationEffect(.degrees(isExpanded ? 90 : 0))
