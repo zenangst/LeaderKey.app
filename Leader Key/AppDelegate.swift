@@ -28,6 +28,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_: Notification) {
     guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
 
+    // Set up main menu
+    NSApp.mainMenu = MainMenu()
+
     state = UserState(userConfig: config)
 
     controller = Controller(userState: state, userConfig: config)
