@@ -27,25 +27,29 @@ struct GroupContentView: View {
 
   var body: some View {
     VStack(spacing: PADDING) {
-      ForEach(Array(group.actions.enumerated()), id: \.offset) {
-        index, item in
+      ForEach(group.actions.indices, id: \.self) { index in
+        let item = group.actions[index]
         ActionOrGroupRow(
           item: binding(for: index),
           onDelete: { group.actions.remove(at: index) }
         )
+        .id(index)
       }
 
-      VStack {
-        AddButtons(
-          onAddAction: {
+      AddButtons(
+        onAddAction: {
+          withAnimation {
             group.actions.append(
               .action(Action(key: "", type: .application, value: "")))
-          },
-          onAddGroup: {
+          }
+        },
+        onAddGroup: {
+          withAnimation {
             group.actions.append(.group(Group(key: "", actions: [])))
           }
-        )
-      }.padding(.top, PADDING * 0.5)
+        }
+      )
+      .padding(.top, PADDING * 0.5)
     }
   }
 
@@ -64,7 +68,7 @@ struct ConfigEditorView: View {
   var body: some View {
     ScrollView {
       GroupContentView(group: $group, isRoot: isRoot)
-        .padding(.init(top: PADDING, leading: PADDING, bottom: PADDING, trailing: 0))
+        .padding(EdgeInsets(top: PADDING, leading: PADDING, bottom: PADDING, trailing: 0))
     }
   }
 }
@@ -72,34 +76,26 @@ struct ConfigEditorView: View {
 struct ActionOrGroupRow: View {
   @Binding var item: ActionOrGroup
   let onDelete: () -> Void
-
+  
   var body: some View {
     switch item {
-    case .action(_):
-      ActionRow(action: actionBinding(), onDelete: onDelete)
-    case .group(_):
-      GroupRow(group: groupBinding(), onDelete: onDelete)
+    case .action(let action):
+      ActionRow(
+        action: Binding(
+          get: { action },
+          set: { item = .action($0) }
+        ),
+        onDelete: onDelete
+      )
+    case .group(let group):
+      GroupRow(
+        group: Binding(
+          get: { group },
+          set: { item = .group($0) }
+        ),
+        onDelete: onDelete
+      )
     }
-  }
-
-  private func actionBinding() -> Binding<Action> {
-    Binding(
-      get: {
-        if case .action(let action) = item { return action }
-        return Action(key: "", type: .application, value: "")
-      },
-      set: { item = .action($0) }
-    )
-  }
-
-  private func groupBinding() -> Binding<Group> {
-    Binding(
-      get: {
-        if case .group(let group) = item { return group }
-        return Group(actions: [])
-      },
-      set: { item = .group($0) }
-    )
   }
 }
 
