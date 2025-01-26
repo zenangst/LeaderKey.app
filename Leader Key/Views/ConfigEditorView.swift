@@ -28,7 +28,6 @@ struct GroupContentView: View {
   var body: some View {
     VStack(spacing: PADDING) {
       ForEach(group.actions.indices, id: \.self) { index in
-        let item = group.actions[index]
         ActionOrGroupRow(
           item: binding(for: index),
           onDelete: { group.actions.remove(at: index) }
