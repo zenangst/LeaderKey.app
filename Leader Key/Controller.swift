@@ -112,7 +112,6 @@ class Controller {
       x: frame.maxX + 20,
       y: frame.midY - cheatsheet.frame.height / 2
     )
-    print(point)
     cheatsheet.setFrameOrigin(point)
   }
 
