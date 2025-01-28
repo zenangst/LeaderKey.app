@@ -1,18 +1,20 @@
+import Defaults
 import KeyboardShortcuts
 import LaunchAtLogin
 import Settings
 import SwiftUI
 
 struct GeneralPane: View {
-  private let contentWidth = 680.0
+  private let contentWidth = 720.0
   @EnvironmentObject private var config: UserConfig
+  @Default(.configDir) var configDir
 
   var body: some View {
     Settings.Container(contentWidth: contentWidth) {
       Settings.Section(
         title: "Config", bottomDivider: true, verticalAlignment: .top
       ) {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
           VStack {
             ConfigEditorView(group: $config.root)
               .frame(height: 500)
@@ -33,10 +35,34 @@ struct GeneralPane: View {
             Button("Reload from file") {
               config.reloadConfig()
             }
+          }
+        }
+      }
 
-            Button("Reveal config file in Finder") {
-              NSWorkspace.shared.activateFileViewerSelecting([config.fileURL()])
-            }
+      Settings.Section(title: "Directory", bottomDivider: true) {
+        HStack {
+          Button("Choose…") {
+            let panel = NSOpenPanel()
+            panel.allowsMultipleSelection = false
+            panel.canChooseDirectories = true
+            panel.canChooseFiles = false
+            if panel.runModal() != .OK { return }
+            guard let selectedPath = panel.url else { return }
+            configDir = selectedPath.path
+          }
+
+          Text(configDir).lineLimit(1).truncationMode(.middle)
+
+          Spacer()
+
+          Button("Reveal") {
+            NSWorkspace.shared.activateFileViewerSelecting([
+              config.fileURL()
+            ])
+          }
+
+          Button("Reset") {
+            configDir = UserConfig.defaultDirectory()
           }
         }
       }

@@ -12,15 +12,21 @@ class UserConfig: ObservableObject {
 
   var afterReload: ((_ success: Bool) -> Void)?
 
-  func fileURL() -> URL {
+  static func defaultDirectory() -> String {
     let appSupportDir = FileManager.default.urls(
       for: .applicationSupportDirectory, in: .userDomainMask)[0]
     let path = (appSupportDir.path as NSString).appendingPathComponent("Leader Key")
+    do {
+      try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
+    } catch {
+      fatalError("Failed to create config directory")
+    }
+    return path
+  }
 
-    // Create directory if it doesn't exist
-    try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
-
-    let filePath = (path as NSString).appendingPathComponent(fileName)
+  func fileURL() -> URL {
+    let dir = Defaults[.configDir]
+    let filePath = (dir as NSString).appendingPathComponent(fileName)
     return URL(fileURLWithPath: filePath)
   }
 
@@ -37,13 +43,6 @@ class UserConfig: ObservableObject {
     }
     let url = fileURL()
     try data.write(to: url, options: [.atomic])
-
-    // Verify the file was written
-    guard FileManager.default.fileExists(atPath: url.path) else {
-      throw NSError(
-        domain: "UserConfig", code: 2,
-        userInfo: [NSLocalizedDescriptionKey: "File was not created after write"])
-    }
   }
 
   func readConfigFile() -> String {
