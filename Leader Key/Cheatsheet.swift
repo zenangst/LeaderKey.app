@@ -12,7 +12,7 @@ enum Cheatsheet {
     let key: String
 
     var body: some SwiftUI.View {
-      Text(key.uppercased())
+      Text(key)
         .font(.system(.body, design: .rounded))
         .multilineTextAlignment(.center)
         .fontWeight(.bold)

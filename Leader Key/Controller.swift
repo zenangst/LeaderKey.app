@@ -60,7 +60,7 @@ class Controller {
     case KeyHelpers.Escape.rawValue:
       hide()
     default:
-      let char = event.charactersIgnoringModifiers?.lowercased()
+      let char = event.charactersIgnoringModifiers
 
       if char == "?" {
         showCheatsheet()
@@ -74,11 +74,11 @@ class Controller {
       let hit = list?.actions.first { item in
         switch item {
         case let .group(group):
-          if group.key?.lowercased() == char {
+          if group.key == char {
             return true
           }
         case let .action(action):
-          if action.key?.lowercased() == char {
+          if action.key == char {
             return true
           }
         }
