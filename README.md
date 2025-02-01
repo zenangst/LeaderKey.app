@@ -6,7 +6,7 @@ A riff on [Raycast](https://www.raycast.com), [@mxstbr's multi-key Karabiner set
 
 Watch the intro video on YouTube:
 
-[![YouTube](https://img.youtube.com/vi/hzzQl5FOL-k/mqdefault.jpg)](https://www.youtube.com/watch?v=hzzQl5FOL-k)
+[![YouTube](https://img.youtube.com/vi/hzzQl5FOL-k/maxresdefault.jpg)](https://www.youtube.com/watch?v=hzzQl5FOL-k)
 
 📦 [Download latest version](https://leader-key-updates.s3.amazonaws.com/Leader%20Key-latest.zip)
 
