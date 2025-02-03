@@ -1,5 +1,6 @@
 import Cocoa
 import Combine
+import Defaults
 import SwiftUI
 
 enum KeyHelpers: UInt16 {
@@ -60,7 +61,16 @@ class Controller {
     case KeyHelpers.Escape.rawValue:
       hide()
     default:
-      let char = event.charactersIgnoringModifiers
+      let keyCode = event.keyCode
+      var char: String =
+        (Defaults[.forceEnglishKeyboardLayout]
+          ? ENGLISH_KEYMAP[keyCode]
+          : event.charactersIgnoringModifiers) ?? ""
+
+      // Check if Shift is pressed and convert to uppercase if so
+      if event.modifierFlags.contains(.shift) {
+        char = char.uppercased()
+      }
 
       if char == "?" {
         showCheatsheet()

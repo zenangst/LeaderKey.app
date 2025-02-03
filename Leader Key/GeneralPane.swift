@@ -39,41 +39,12 @@ struct GeneralPane: View {
         }
       }
 
-      Settings.Section(title: "Directory", bottomDivider: true) {
-        HStack {
-          Button("Choose…") {
-            let panel = NSOpenPanel()
-            panel.allowsMultipleSelection = false
-            panel.canChooseDirectories = true
-            panel.canChooseFiles = false
-            if panel.runModal() != .OK { return }
-            guard let selectedPath = panel.url else { return }
-            configDir = selectedPath.path
-          }
-
-          Text(configDir).lineLimit(1).truncationMode(.middle)
-
-          Spacer()
-
-          Button("Reveal") {
-            NSWorkspace.shared.activateFileViewerSelecting([
-              config.fileURL()
-            ])
-          }
-
-          Button("Reset") {
-            configDir = UserConfig.defaultDirectory()
-          }
-        }
-      }
-
       Settings.Section(title: "Shortcut") {
         KeyboardShortcuts.Recorder(for: .activate)
       }
 
       Settings.Section(title: "App") {
         LaunchAtLogin.Toggle()
-        Defaults.Toggle("Show Leader Key in menubar", key: .showMenuBarIcon)
       }
     }
   }
