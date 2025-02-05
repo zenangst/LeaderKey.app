@@ -28,6 +28,32 @@ $ brew install leader-key
 - `[leader][m][m]` → Mute audio (`media mute`)
 - `[leader][w][m]` → Maximize current window (`window maximize`)
 
+## FAQ
+
+#### What to I set as my Leader Key?
+
+Any key can be your leader key, but **only modifiers will not work**.
+
+**Examples:**
+
+- <kbd>F12</kbd>
+- <kbd>⌘ + space</kbd>
+- <kbd>⌘⌥ + space</kbd>
+- <kbd>⌘⌥⌃⇧ + L</kbd> (hyper key)
+
+**Advanced examples:**
+
+Using [Karabiner](https://karabiner-elements.pqrs.org/) you can do more fancy things like:
+
+- <kbd>right ⌘ + left ⌘</kbd> at once (bound to <kbd>F12</kbd>) my personal favorite
+- <kbd>caps lock</kbd> (bound to <kbd>hyper</kbd> when held, <kbd>F12</kbd> when pressed)
+
+See [@mikker's config](https://github.com/mikker/LeaderKey.app/wiki/@mikker's-config) in the wiki for akimbo cmds example.
+
+#### I disabled the menubar item, how can I get Leader Key back?
+
+Activate Leader Key, then <kbd>cmd + ,</kbd>.
+
 ## License
 
 MIT
