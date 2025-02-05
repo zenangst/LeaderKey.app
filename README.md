@@ -24,9 +24,9 @@ $ brew install leader-key
 
 ### Example Shortcuts:
 
-- `[leader][o][m]` → Launch Messages (`open messages`)
-- `[leader][m][m]` → Mute audio (`media mute`)
-- `[leader][w][m]` → Maximize current window (`window maximize`)
+- <kbd>leader</kbd><kbd>o</kbd><kbd>m</kbd> → Launch Messages (`open messages`)
+- <kbd>leader</kbd><kbd>m</kbd><kbd>m</kbd> → Mute audio (`media mute`)
+- <kbd>leader</kbd><kbd>w</kbd><kbd>m</kbd> → Maximize current window (`window maximize`)
 
 ## FAQ
 
