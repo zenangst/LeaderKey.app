@@ -128,8 +128,8 @@ enum Cheatsheet {
         SwiftUI.VStack(alignment: .leading, spacing: 4) {
           if let group = userState.currentGroup {
             HStack {
-              KeyBadge(key: group.key ?? "")
-              Text(group.displayName)
+              KeyBadge(key: group.key ?? "•")
+              Text(group.key == nil ? "Leader Key" : group.displayName)
                 .foregroundStyle(.secondary)
             }
             .padding(.bottom, 8)
