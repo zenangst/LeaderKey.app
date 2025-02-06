@@ -19,6 +19,8 @@ class AppDelegate: NSObject, NSApplicationDelegate,
   let statusItem = StatusItem()
   let config = UserConfig()
 
+  var booting = true
+
   var state: UserState!
   @IBOutlet var updaterController: SPUStandardUpdaterController!
 
@@ -105,6 +107,16 @@ class AppDelegate: NSObject, NSApplicationDelegate,
       } else {
         self.show()
       }
+    }
+  }
+
+  func applicationDidBecomeActive(_ notification: Notification) {
+    // If this is the first activation, don't show as we're just booting the app
+    if booting {
+      booting = false
+    } else {
+      // If activated again, user ran the app twice so show the window
+      controller.show()
     }
   }
 
