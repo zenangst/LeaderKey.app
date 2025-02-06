@@ -42,7 +42,7 @@ class Window: PanelWindow, NSWindowDelegate {
 
   // Hide when focus shifts elsewhere
   func windowDidResignKey(_ notification: Notification) {
-    hide()
+    controller.hide()
   }
 
   override func makeKeyAndOrderFront(_ sender: Any?) {
