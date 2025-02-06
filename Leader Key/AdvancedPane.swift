@@ -8,14 +8,19 @@ struct AdvancedPane: View {
   private let contentWidth = 640.0
   @EnvironmentObject private var config: UserConfig
   @Default(.configDir) var configDir
+  @Default(.modifierKeyForGroupSequence) var modifierKeyForGroupSequence
+    
 
   var body: some View {
     Settings.Container(contentWidth: contentWidth) {
-      Settings.Section(
-        title: "Config directory",
-        bottomDivider: true
-      ) {
-        HStack {
+    Settings.Section(
+      title: "Config directory",
+      bottomDivider: true
+    ) {
+      HStack () {
+        Text(configDir).lineLimit(1).truncationMode(.middle) 
+      }
+      HStack {
           Button("Choose…") {
             let panel = NSOpenPanel()
             panel.allowsMultipleSelection = false
@@ -25,11 +30,6 @@ struct AdvancedPane: View {
             guard let selectedPath = panel.url else { return }
             configDir = selectedPath.path
           }
-
-          Text(configDir).lineLimit(1).truncationMode(.middle)
-
-          Spacer()
-
           Button("Reveal") {
             NSWorkspace.shared.activateFileViewerSelecting([
               config.fileURL()
@@ -40,6 +40,19 @@ struct AdvancedPane: View {
             configDir = UserConfig.defaultDirectory()
           }
         }
+      }
+        
+      Settings.Section(title: "Group Sequence Modifier Key", bottomDivider: true) {
+        Picker("", selection: $modifierKeyForGroupSequence) {
+            ForEach(ModifierKey.allCases, id: \.self) { key in
+                Text(key.rawValue.capitalized).tag(key)
+          }
+        }
+        .pickerStyle(MenuPickerStyle())
+        Text("Hold this modifier when pressing a group key to run all actions in that group (and its sub-groups).")
+              .font(.subheadline)
+        .padding(.leading, 10)
+        .padding(.top, 2)
       }
 
       Settings.Section(title: "Cheatsheet", bottomDivider: true) {
