@@ -26,6 +26,7 @@ class Controller {
 
   func show() {
     window.show()
+
     if Defaults[.alwaysShowCheatsheet] {
       showCheatsheet()
     }
@@ -96,7 +97,7 @@ class Controller {
           self.runAction(action)
         }
       case let .group(group):
-        if (shouldRunGroupSequence(event)){
+        if shouldRunGroupSequence(event) {
           hide {
             self.runGroup(group)
           }
@@ -115,14 +116,14 @@ class Controller {
     }
   }
 
-  private func shouldRunGroupSequence(_ event: NSEvent) -> Bool{
+  private func shouldRunGroupSequence(_ event: NSEvent) -> Bool {
     let selectedModifier = Defaults[.modifierKeyForGroupSequence]
     guard let modifierFlag = selectedModifier.flag else {
       return false
     }
     return event.modifierFlags.contains(modifierFlag)
   }
-  
+
   private func charForEvent(_ event: NSEvent) -> String? {
     if Defaults[.forceEnglishKeyboardLayout] {
       if let mapped = ENGLISH_KEYMAP[event.keyCode] {
@@ -159,10 +160,10 @@ class Controller {
     group.actions.forEach { groupOrAction in
       switch groupOrAction
       {
-        case let .group(group):
-          runGroup(group)
-        case let .action(action):
-          runAction(action)
+      case let .group(group):
+        runGroup(group)
+      case let .action(action):
+        runAction(action)
       }
     }
   }

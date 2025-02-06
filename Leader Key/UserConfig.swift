@@ -267,9 +267,9 @@ enum ModifierKey: String, Codable, Defaults.Serializable, CaseIterable, Identifi
 
   var flag: NSEvent.ModifierFlags? {
     switch self {
-      case .control: return .control
-      case .option:  return .option
-      default:  return nil
+    case .control: return .control
+    case .option: return .option
+    default: return nil
     }
   }
 }
