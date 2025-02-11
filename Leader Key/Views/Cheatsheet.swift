@@ -9,6 +9,8 @@ import Defaults
 import SwiftUI
 
 enum Cheatsheet {
+  private static let iconSize = NSSize(width: 24, height: 24)
+  
   struct KeyBadge: SwiftUI.View {
     let key: String
 
@@ -27,6 +29,7 @@ enum Cheatsheet {
   struct ActionRow: SwiftUI.View {
     let action: Action
     let indent: Int
+    @Default(.showAppIconsInCheatsheet) var showAppIcons
 
     var icon: String {
       switch action.type {
@@ -45,8 +48,15 @@ enum Cheatsheet {
             Text("  ")
           }
           KeyBadge(key: action.key ?? "●")
-          Image(systemName: icon)
-            .foregroundStyle(.secondary)
+          
+          if action.type == .application && showAppIcons {
+            AppIconImage(appPath: action.value, size: iconSize)
+          } else {
+            Image(systemName: icon)
+              .foregroundStyle(.secondary)
+              .frame(width: iconSize.width, height: iconSize.height, alignment: .center)
+          }
+          
           Text(action.displayName)
             .lineLimit(1)
             .truncationMode(.middle)
@@ -74,6 +84,7 @@ enum Cheatsheet {
           KeyBadge(key: group.key ?? "")
           Image(systemName: "folder")
             .foregroundStyle(.secondary)
+            .frame(width: iconSize.width, height: iconSize.height, alignment: .center)
           Text(group.displayName)
           Spacer()
           Text("\(group.actions.count.description) item(s)")
@@ -189,5 +200,54 @@ struct CheatsheetView_Previews: PreviewProvider {
   static var previews: some View {
     Cheatsheet.CheatsheetView()
       .environmentObject(UserState(userConfig: UserConfig()))
+  }
+}
+
+struct AppIconImage: View {
+  let appPath: String
+  let size: NSSize
+  let defaultSystemName: String = "questionmark.circle"
+
+  init(appPath: String, size: NSSize = NSSize(width: 24, height: 24)) {
+    self.appPath = appPath
+    self.size = size
+  }
+  
+  var body: some View {
+    let image = if let icon = getAppIcon(path: appPath) {
+      Image(nsImage: icon)
+    } else {
+      Image(systemName: defaultSystemName)
+    }
+    image.resizable()
+      .scaledToFit()
+      .frame(width: size.width, height: size.height)
+  }
+  
+  private func getAppIcon(path: String) -> NSImage? {
+    guard FileManager.default.fileExists(atPath: path) else {
+      return nil
+    }
+    
+    let icon = NSWorkspace.shared.icon(forFile: path)
+    let resizedIcon = NSImage(size: size, flipped: false) { rect in
+      let iconRect = NSRect(origin: .zero, size: icon.size)
+      icon.draw(in: rect, from: iconRect, operation: .sourceOver, fraction: 1)
+      return true
+    }
+    return resizedIcon
+  }
+}
+
+
+struct AppImage_Preview: PreviewProvider {
+  static var previews: some View {
+    let appPaths = ["/Applications/Xcode.app", "/Applications/Safari.app", "/invalid/path"]
+    VStack {
+      ForEach(appPaths, id: \.self) { path in
+        AppIconImage(appPath: path)
+      }
+    }
+    .padding()
   }
 }
