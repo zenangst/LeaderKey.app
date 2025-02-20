@@ -1,13 +1,13 @@
 {
-  "originHash" : "4a6c0b5daacd5b198cdd0356667a20152b63972b0c3503ca544bfbed2a5d5f13",
+  "originHash" : "29a6aa3eefda677084c54911d3f93a05c6fef51c65269126c74d6cf42659b804",
   "pins" : [
     {
       "identity" : "defaults",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/Defaults",
       "state" : {
-        "revision" : "38925e3cfacf3fb89a81a35b1cd44fd5a5b7e0fa",
-        "version" : "8.2.0"
+        "revision" : "3d98a76aab39eedf957274e98e15ebe6bb390b87",
+        "version" : "9.0.1"
       }
     },
     {
@@ -44,6 +44,24 @@
       "state" : {
         "revision" : "0ef1ee0220239b3776f433314515fd849025673f",
         "version" : "2.6.4"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
+      }
+    },
+    {
+      "identity" : "swiftformatplugins",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/StarLard/SwiftFormatPlugins.git",
+      "state" : {
+        "revision" : "8b7fe1b899d82e1abbe4a88d7593645e06669467",
+        "version" : "1.1.1"
       }
     }
   ],

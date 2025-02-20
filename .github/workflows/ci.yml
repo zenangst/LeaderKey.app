@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  format:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install swift-format
+      - run: swift-format format lint --recursive .
+
+  test:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo xcode-select -switch /Applications/Xcode_16.1.app
+      - run: |
+          xcodebuild test \
+            -project "Leader Key.xcodeproj" \
+            -scheme "Leader Key" \
+            -destination "platform=macOS" \
+            -testPlan "TestPlan" \
+            -skipPackagePluginValidation \
+            -skipMacroValidation \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO

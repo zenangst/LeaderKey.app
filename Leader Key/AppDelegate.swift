@@ -6,7 +6,7 @@ import Sparkle
 import SwiftUI
 import UserNotifications
 
-let UPDATE_NOTIFICATION_IDENTIFIER = "UpdateCheck"
+let updateLocationIdentifier = "UpdateCheck"
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate,
@@ -18,6 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate,
 
   let statusItem = StatusItem()
   let config = UserConfig()
+
+  var fileMonitor: FileMonitor!
 
   var booting = true
 
@@ -42,11 +44,10 @@ class AppDelegate: NSObject, NSApplicationDelegate,
   )
 
   func applicationDidFinishLaunching(_: Notification) {
-    ensureConfigDir()
-
     guard
       ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1"
     else { return }
+    guard !isRunningTests() else { return }
 
     UNUserNotificationCenter.current().delegate = self
     UNUserNotificationCenter.current().requestAuthorization(options: [
@@ -76,7 +77,20 @@ class AppDelegate: NSObject, NSApplicationDelegate,
       }
     }
 
-    config.loadAndWatch()
+    config.ensureAndLoad()
+
+    Task {
+      for await _ in Defaults.updates(.configDir) {
+        self.fileMonitor?.stopMonitoring()
+
+        self.fileMonitor = FileMonitor(
+          fileURL: config.url,
+          callback: {
+            self.config.reloadConfig()
+          })
+        self.fileMonitor.startMonitoring()
+      }
+    }
 
     statusItem.handlePreferences = {
       self.settingsWindowController.show()
@@ -86,7 +100,7 @@ class AppDelegate: NSObject, NSApplicationDelegate,
       self.config.reloadConfig()
     }
     statusItem.handleRevealConfig = {
-      NSWorkspace.shared.activateFileViewerSelecting([self.config.fileURL()])
+      NSWorkspace.shared.activateFileViewerSelecting([self.config.url])
     }
     statusItem.handleCheckForUpdates = {
       self.updaterController.checkForUpdates(nil)
@@ -125,12 +139,6 @@ class AppDelegate: NSObject, NSApplicationDelegate,
     config.saveConfig()
   }
 
-  private func ensureConfigDir() {
-    if Defaults[.configDir] == CONFIG_DIR_EMPTY {
-      Defaults[.configDir] = UserConfig.defaultDirectory()
-    }
-  }
-
   @IBAction
   func settingsMenuItemActionHandler(_: NSMenuItem) {
     settingsWindowController.show()
@@ -165,7 +173,7 @@ class AppDelegate: NSObject, NSApplicationDelegate,
       content.body = "Version \(update.displayVersionString) is now available"
 
       let request = UNNotificationRequest(
-        identifier: UPDATE_NOTIFICATION_IDENTIFIER, content: content,
+        identifier: updateLocationIdentifier, content: content,
         trigger: nil)
       UNUserNotificationCenter.current().add(request)
     }
@@ -178,7 +186,7 @@ class AppDelegate: NSObject, NSApplicationDelegate,
 
     UNUserNotificationCenter.current().removeDeliveredNotifications(
       withIdentifiers: [
-        UPDATE_NOTIFICATION_IDENTIFIER
+        updateLocationIdentifier
       ])
   }
 
@@ -194,11 +202,17 @@ class AppDelegate: NSObject, NSApplicationDelegate,
     withCompletionHandler completionHandler: @escaping () -> Void
   ) {
     if response.notification.request.identifier
-      == UPDATE_NOTIFICATION_IDENTIFIER
+      == updateLocationIdentifier
       && response.actionIdentifier == UNNotificationDefaultActionIdentifier
     {
       updaterController.checkForUpdates(nil)
     }
     completionHandler()
+  }
+
+  func isRunningTests() -> Bool {
+    let environment = ProcessInfo.processInfo.environment
+    guard environment["XCTestSessionIdentifier"] != nil else { return false }
+    return true
   }
 }

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "1DE516A3-9AD7-49EC-B153-CBB6A36C0B13",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Leader Key.xcodeproj",
+        "identifier" : "427C17F72BD311B500955B98",
+        "name" : "Leader KeyTests"
+      }
+    }
+  ],
+  "version" : 1
+}
