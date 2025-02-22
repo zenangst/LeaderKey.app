@@ -1,10 +1,3 @@
-//
-//  CheatsheetView.swift
-//  Leader Key
-//
-//  Created by Mikkel Malmberg on 26/01/2025.
-//
-
 import Defaults
 import SwiftUI
 
@@ -123,7 +116,7 @@ enum Cheatsheet {
         let screenHalf = screen.visibleFrame.width / 2
         let desiredWidth: CGFloat = 580
         let margin: CGFloat = 20
-        return min(desiredWidth, screenHalf - margin * 2 - mainViewSize / 2)
+        return desiredWidth > screenHalf ? screenHalf - margin : desiredWidth
       }
       return 580
     }

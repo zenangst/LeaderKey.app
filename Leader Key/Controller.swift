@@ -15,17 +15,26 @@ class Controller {
   var userState: UserState
   var userConfig: UserConfig
 
-  var window: Window!
+  var window: MainWindow!
   var cheatsheetWindow: NSWindow!
 
   init(userState: UserState, userConfig: UserConfig) {
     self.userState = userState
     self.userConfig = userConfig
+
+    Task {
+      for await value in Defaults.updates(.theme) {
+        let windowClass = Theme.classFor(value)
+        self.window = await windowClass.init(controller: self)
+      }
+    }
+
     self.cheatsheetWindow = Cheatsheet.createWindow(for: userState)
   }
 
   func show() {
     Events.send(.willActivate)
+
     window.show {
       Events.send(.didActivate)
     }
@@ -113,7 +122,7 @@ class Controller {
           userState.currentGroup = group
         }
       case .none:
-        window.shake()
+        window.notFound()
       }
     }
 
@@ -150,12 +159,8 @@ class Controller {
     guard let mainWindow = window, let cheatsheet = cheatsheetWindow else {
       return
     }
-    let frame = mainWindow.frame
-    let point = NSPoint(
-      x: frame.maxX + 20,
-      y: frame.midY - cheatsheet.frame.height / 2
-    )
-    cheatsheet.setFrameOrigin(point)
+
+    cheatsheet.setFrameOrigin(mainWindow.cheatsheetOrigin(cheatsheetSize: cheatsheet.frame.size))
   }
 
   private func showCheatsheet() {
