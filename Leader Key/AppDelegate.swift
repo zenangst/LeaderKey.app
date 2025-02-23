@@ -59,21 +59,9 @@ class AppDelegate: NSObject, NSApplicationDelegate,
 
     NSApp.mainMenu = MainMenu()
 
-    state = UserState(userConfig: config)
-
-    controller = Controller(userState: state, userConfig: config)
-
-    config.afterReload = { _ in
-      self.state.display = "🔃"
-      self.state.isShowingRefreshState = true
-      self.show()
-      delay(1000) {
-        self.hide()
-        self.state.isShowingRefreshState = false
-      }
-    }
-
     config.ensureAndLoad()
+    state = UserState(userConfig: config)
+    controller = Controller(userState: state, userConfig: config)
 
     Task {
       for await _ in Defaults.updates(.configDir) {
