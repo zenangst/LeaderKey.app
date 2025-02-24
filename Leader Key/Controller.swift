@@ -229,7 +229,8 @@ class Controller {
     case .command:
       CommandRunner.run(action.value)
     case .folder:
-      NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: action.value)
+      let path: String = (action.value as NSString).expandingTildeInPath
+      NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: path)
     default:
       print("\(action.type) unknown")
     }
