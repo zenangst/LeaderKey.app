@@ -6,40 +6,65 @@ struct KeyButton: View {
   let placeholder: String
   @State private var isListening = false
   @State private var oldValue = ""
+  var validationError: ValidationErrorType? = nil
+  var onKeyChanged: (() -> Void)? = nil
 
   var body: some View {
     Button(action: {
-      oldValue = text  // Store the old value when entering listening mode
+      oldValue = text
       isListening = true
     }) {
       Text(text.isEmpty ? placeholder : text)
         .frame(width: 32, height: 24)
         .background(
           RoundedRectangle(cornerRadius: 5)
-            .fill(isListening ? Color.blue.opacity(0.2) : Color(.controlBackgroundColor))
+            .fill(backgroundColor)
             .overlay(
               RoundedRectangle(cornerRadius: 5)
-                .stroke(isListening ? Color.blue : Color.gray.opacity(0.5), lineWidth: 1)
+                .stroke(borderColor, lineWidth: 1)
             )
         )
         .foregroundColor(text.isEmpty ? .gray : .primary)
     }
     .buttonStyle(PlainButtonStyle())
-    .background(KeyListenerView(isListening: $isListening, text: $text, oldValue: $oldValue))
+    .background(
+      KeyListenerView(
+        isListening: $isListening, text: $text, oldValue: $oldValue, onKeyChanged: onKeyChanged))
+  }
+
+  private var backgroundColor: Color {
+    if isListening {
+      return Color.blue.opacity(0.2)
+    } else if validationError != nil {
+      return Color.red.opacity(0.1)
+    } else {
+      return Color(.controlBackgroundColor)
+    }
+  }
+
+  private var borderColor: Color {
+    if isListening {
+      return Color.blue
+    } else if validationError != nil {
+      return Color.red
+    } else {
+      return Color.gray.opacity(0.5)
+    }
   }
 }
 
-// NSViewRepresentable to listen for key events
 struct KeyListenerView: NSViewRepresentable {
   @Binding var isListening: Bool
   @Binding var text: String
   @Binding var oldValue: String
+  var onKeyChanged: (() -> Void)?
 
   func makeNSView(context: Context) -> NSView {
     let view = KeyListenerNSView()
     view.isListening = $isListening
     view.text = $text
     view.oldValue = $oldValue
+    view.onKeyChanged = onKeyChanged
     return view
   }
 
@@ -48,8 +73,8 @@ struct KeyListenerView: NSViewRepresentable {
       view.isListening = $isListening
       view.text = $text
       view.oldValue = $oldValue
+      view.onKeyChanged = onKeyChanged
 
-      // When isListening changes to true, make this view the first responder
       if isListening {
         DispatchQueue.main.async {
           view.window?.makeFirstResponder(view)
@@ -62,13 +87,12 @@ struct KeyListenerView: NSViewRepresentable {
     var isListening: Binding<Bool>?
     var text: Binding<String>?
     var oldValue: Binding<String>?
+    var onKeyChanged: (() -> Void)?
 
     override var acceptsFirstResponder: Bool { true }
 
     override func viewDidMoveToWindow() {
       super.viewDidMoveToWindow()
-      // Don't automatically become first responder here
-      // We'll do it in updateNSView when isListening becomes true
     }
 
     override func keyDown(with event: NSEvent) {
@@ -77,42 +101,30 @@ struct KeyListenerView: NSViewRepresentable {
         return
       }
 
-      // Handle escape key - cancel and revert to old value
-      if event.keyCode == 53 {  // Escape key
+      switch event.keyCode {
+      case 53:  // Escape key
         if let oldValue = oldValue {
           text.wrappedValue = oldValue.wrappedValue
         }
-        DispatchQueue.main.async {
-          isListening.wrappedValue = false
-        }
-        return
-      }
-
-      // Handle backspace/delete - clear the value
-      if event.keyCode == 51 || event.keyCode == 117 {  // Backspace or Delete
+      case 51, 117:  // Backspace or Delete
         text.wrappedValue = ""
-        DispatchQueue.main.async {
-          isListening.wrappedValue = false
+      default:
+        if let characters = event.characters, !characters.isEmpty {
+          text.wrappedValue = String(characters.first!)
         }
-        return
       }
 
-      // Handle regular key presses
-      if let characters = event.characters, !characters.isEmpty {
-        text.wrappedValue = String(characters.first!)
-        // Set isListening to false after a short delay to ensure the key event is processed
-        DispatchQueue.main.async {
-          isListening.wrappedValue = false
-        }
+      DispatchQueue.main.async {
+        isListening.wrappedValue = false
+        self.onKeyChanged?()
       }
     }
 
-    // Add this method to handle when the view loses focus
     override func resignFirstResponder() -> Bool {
-      // If we're still in listening mode when losing focus, exit listening mode
       if let isListening = isListening, isListening.wrappedValue {
         DispatchQueue.main.async {
           isListening.wrappedValue = false
+          self.onKeyChanged?()
         }
       }
       return super.resignFirstResponder()
@@ -123,14 +135,38 @@ struct KeyListenerView: NSViewRepresentable {
 #Preview {
   struct Container: View {
     @State var text = "a"
+    @StateObject var userConfig = UserConfig()
 
     var body: some View {
       VStack(spacing: 20) {
-        KeyButton(text: $text, placeholder: "Key")
+        KeyButton(
+          text: $text,
+          placeholder: "Key",
+          onKeyChanged: { print("Key changed") }
+        )
+        KeyButton(
+          text: $text,
+          placeholder: "Key",
+          validationError: .duplicateKey,
+          onKeyChanged: { print("Key changed") }
+        )
+        KeyButton(
+          text: $text,
+          placeholder: "Key",
+          validationError: .emptyKey,
+          onKeyChanged: { print("Key changed") }
+        )
+        KeyButton(
+          text: $text,
+          placeholder: "Key",
+          validationError: .nonSingleCharacterKey,
+          onKeyChanged: { print("Key changed") }
+        )
         Text("Current value: '\(text)'")
       }
       .padding()
       .frame(width: 300)
+      .environmentObject(userConfig)
     }
   }
 

@@ -23,13 +23,17 @@ struct AddButtons: View {
 
 struct GroupContentView: View {
   @Binding var group: Group
+  @EnvironmentObject var userConfig: UserConfig
   var isRoot: Bool = false
+  var parentPath: [Int] = []
 
   var body: some View {
     VStack(spacing: generalPadding) {
       ForEach(group.actions.indices, id: \.self) { index in
+        let currentPath = parentPath + [index]
         ActionOrGroupRow(
           item: binding(for: index),
+          path: currentPath,
           onDelete: { group.actions.remove(at: index) },
           onDuplicate: { group.actions.insert(group.actions[index], at: index) }
         )
@@ -63,11 +67,12 @@ struct GroupContentView: View {
 
 struct ConfigEditorView: View {
   @Binding var group: Group
+  @EnvironmentObject var userConfig: UserConfig
   var isRoot: Bool = true
 
   var body: some View {
     ScrollView {
-      GroupContentView(group: $group, isRoot: isRoot)
+      GroupContentView(group: $group, isRoot: isRoot, parentPath: [])
         .padding(
           EdgeInsets(
             top: generalPadding, leading: generalPadding,
@@ -78,8 +83,10 @@ struct ConfigEditorView: View {
 
 struct ActionOrGroupRow: View {
   @Binding var item: ActionOrGroup
+  var path: [Int]
   let onDelete: () -> Void
   let onDuplicate: () -> Void
+  @EnvironmentObject var userConfig: UserConfig
 
   var body: some View {
     switch item {
@@ -94,6 +101,7 @@ struct ActionOrGroupRow: View {
             item = .action(newAction)
           }
         ),
+        path: path,
         onDelete: onDelete,
         onDuplicate: onDuplicate
       )
@@ -108,6 +116,7 @@ struct ActionOrGroupRow: View {
             item = .group(newGroup)
           }
         ),
+        path: path,
         onDelete: onDelete,
         onDuplicate: onDuplicate
       )
@@ -117,9 +126,11 @@ struct ActionOrGroupRow: View {
 
 struct ActionRow: View {
   @Binding var action: Action
+  var path: [Int]
   let onDelete: () -> Void
   let onDuplicate: () -> Void
   @FocusState private var isKeyFocused: Bool
+  @EnvironmentObject var userConfig: UserConfig
 
   var body: some View {
     HStack(spacing: generalPadding) {
@@ -127,7 +138,9 @@ struct ActionRow: View {
         text: Binding(
           get: { action.key ?? "" },
           set: { action.key = $0 }
-        ), placeholder: "Key")
+        ), placeholder: "Key", validationError: validationErrorForKey,
+        onKeyChanged: { userConfig.finishEditingKey() }
+      )
 
       Picker("Type", selection: $action.type) {
         Text("Application").tag(Type.application)
@@ -186,14 +199,31 @@ struct ActionRow: View {
       .padding(.trailing, generalPadding)
     }
   }
+
+  private var validationErrorForKey: ValidationErrorType? {
+    guard !path.isEmpty else { return nil }
+
+    // Find validation errors for this item
+    let errors = userConfig.validationErrors.filter { error in
+      error.path == path
+    }
+
+    if let error = errors.first {
+      return error.type
+    }
+
+    return nil
+  }
 }
 
 struct GroupRow: View {
   @Binding var group: Group
+  var path: [Int]
   @State private var isExpanded = false
   @FocusState private var isKeyFocused: Bool
   let onDelete: () -> Void
   let onDuplicate: () -> Void
+  @EnvironmentObject var userConfig: UserConfig
 
   var body: some View {
     VStack(spacing: generalPadding) {
@@ -203,7 +233,9 @@ struct GroupRow: View {
             get: { group.key ?? "" },
             set: { group.key = $0 }
           ),
-          placeholder: "Group Key"
+          placeholder: "Group Key",
+          validationError: validationErrorForKey,
+          onKeyChanged: { userConfig.finishEditingKey() }
         )
 
         Image(systemName: "chevron.right")
@@ -237,12 +269,27 @@ struct GroupRow: View {
             .padding(.leading, generalPadding)
             .padding(.trailing, generalPadding / 3)
 
-          GroupContentView(group: $group)
+          GroupContentView(group: $group, parentPath: path)
             .padding(.leading, generalPadding)
         }
       }
     }
     .padding(.horizontal, 0)
+  }
+
+  private var validationErrorForKey: ValidationErrorType? {
+    guard !path.isEmpty else { return nil }
+
+    // Find validation errors for this item
+    let errors = userConfig.validationErrors.filter { error in
+      error.path == path
+    }
+
+    if let error = errors.first {
+      return error.type
+    }
+
+    return nil
   }
 }
 
@@ -300,6 +347,9 @@ struct GroupRow: View {
           ])),
     ])
 
-  ConfigEditorView(group: .constant(group))
+  let userConfig = UserConfig()
+
+  return ConfigEditorView(group: .constant(group))
     .frame(width: 600, height: 500)
+    .environmentObject(userConfig)
 }

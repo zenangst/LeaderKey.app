@@ -6,10 +6,12 @@ let emptyRoot = Group(key: "🚫", label: "Config error", actions: [])
 
 class UserConfig: ObservableObject {
   @Published var root = emptyRoot
+  @Published var validationErrors: [ValidationError] = []
 
   let fileName = "config.json"
   private let alertHandler: AlertHandler
   private let fileManager: FileManager
+  private var suppressValidationAlerts = false
 
   init(
     alertHandler: AlertHandler = DefaultAlertHandler(),
@@ -29,11 +31,22 @@ class UserConfig: ObservableObject {
 
   func reloadConfig() {
     Events.send(.willReload)
-    loadConfig()
+    loadConfig(suppressAlerts: true)
     Events.send(.didReload)
   }
 
   func saveConfig() {
+    validationErrors = ConfigValidator.validate(group: root)
+
+    if !validationErrors.isEmpty {
+      let errorCount = validationErrors.count
+      alertHandler.showAlert(
+        style: .warning,
+        message:
+          "Found \(errorCount) validation issue\(errorCount > 1 ? "s" : "") in your configuration. The configuration will still be saved, but some keys may not work as expected."
+      )
+    }
+
     do {
       let encoder = JSONEncoder()
       encoder.outputFormatting = [
@@ -80,17 +93,14 @@ class UserConfig: ObservableObject {
 
   // MARK: - File Operations
 
-  /// The path to the config file
   var path: String {
     (Defaults[.configDir] as NSString).appendingPathComponent(fileName)
   }
 
-  /// The URL to the config file
   var url: URL {
     URL(fileURLWithPath: path)
   }
 
-  /// Whether the config file exists
   var exists: Bool {
     fileManager.fileExists(atPath: path)
   }
@@ -126,9 +136,10 @@ class UserConfig: ObservableObject {
 
   // MARK: - Config Loading
 
-  private func loadConfig() {
+  private func loadConfig(suppressAlerts: Bool = false) {
     guard exists else {
       root = emptyRoot
+      validationErrors = []
       return
     }
 
@@ -147,9 +158,30 @@ class UserConfig: ObservableObject {
 
       let decoder = JSONDecoder()
       root = try decoder.decode(Group.self, from: jsonData)
+
+      validationErrors = ConfigValidator.validate(group: root)
+
+      if !validationErrors.isEmpty && !suppressAlerts && !suppressValidationAlerts {
+        let errorCount = validationErrors.count
+        alertHandler.showAlert(
+          style: .warning,
+          message:
+            "Found \(errorCount) validation issue\(errorCount > 1 ? "s" : "") in your configuration. Some keys may not work as expected."
+        )
+      }
     } catch {
       handleError(error, critical: true)
     }
+  }
+
+  // MARK: - Validation
+
+  func validateWithoutAlerts() {
+    validationErrors = ConfigValidator.validate(group: root)
+  }
+
+  func finishEditingKey() {
+    validateWithoutAlerts()
   }
 
   // MARK: - Error Handling
@@ -159,6 +191,7 @@ class UserConfig: ObservableObject {
       style: critical ? .critical : .warning, message: "\(error)")
     if critical {
       root = emptyRoot
+      validationErrors = []
     }
   }
 }

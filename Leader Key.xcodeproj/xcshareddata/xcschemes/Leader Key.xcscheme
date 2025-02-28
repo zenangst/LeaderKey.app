@@ -30,11 +30,11 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Leader Key.xctestplan"
-            default = "YES">
+            reference = "container:Leader Key.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:Leader Key/Support/TestPlan.xctestplan">
+            reference = "container:Leader Key/Support/TestPlan.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
       <Testables>
