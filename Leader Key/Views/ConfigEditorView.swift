@@ -190,7 +190,7 @@ struct ActionRow: View {
 
 struct GroupRow: View {
   @Binding var group: Group
-  @State private var isExpanded = true
+  @State private var isExpanded = false
   @FocusState private var isKeyFocused: Bool
   let onDelete: () -> Void
   let onDuplicate: () -> Void
