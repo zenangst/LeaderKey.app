@@ -6,22 +6,31 @@ final class UserState: ObservableObject {
   var userConfig: UserConfig!
 
   @Published var display: String?
-  @Published var currentGroup: Group?
   @Published var isShowingRefreshState: Bool
+  @Published var navigationPath: [Group] = []
+
+  var currentGroup: Group? {
+    return navigationPath.last
+  }
 
   init(
-    userConfig: UserConfig!, lastChar: String? = nil, currentGroup: Group? = nil,
+    userConfig: UserConfig!,
+    lastChar: String? = nil,
     isShowingRefreshState: Bool = false
   ) {
     self.userConfig = userConfig
     display = lastChar
-    self.currentGroup = currentGroup
     self.isShowingRefreshState = isShowingRefreshState
+    self.navigationPath = []
   }
 
   func clear() {
     display = nil
-    currentGroup = userConfig.root
+    navigationPath = []
     isShowingRefreshState = false
+  }
+
+  func navigateToGroup(_ group: Group) {
+    navigationPath.append(group)
   }
 }
