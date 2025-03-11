@@ -8,7 +8,7 @@ Watch the intro video on YouTube:
 
 [![YouTube](https://img.youtube.com/vi/hzzQl5FOL-k/maxresdefault.jpg)](https://www.youtube.com/watch?v=hzzQl5FOL-k)
 
-📦 [Download latest version](https://leader-key-updates.s3.amazonaws.com/Leader%20Key-latest.zip)
+📦 [Download latest version](https://github.com/mikker/LeaderKey.app/releases)
 
 ```sh
 $ brew install leader-key
