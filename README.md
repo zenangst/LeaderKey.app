@@ -6,7 +6,12 @@ A riff on [Raycast](https://www.raycast.com), [@mxstbr's multi-key Karabiner set
 
 Watch the intro video on YouTube:
 
-[![YouTube](https://img.youtube.com/vi/hzzQl5FOL-k/maxresdefault.jpg)](https://www.youtube.com/watch?v=hzzQl5FOL-k)
+<div>
+<a href="https://www.youtube.com/watch?v=EQYakLsYSAQ"><img src="https://img.youtube.com/vi/EQYakLsYSAQ/maxresdefault.jpg" width=480></a>
+<a href="https://www.youtube.com/watch?v=hzzQl5FOL-k"><img src="https://img.youtube.com/vi/hzzQl5FOL-k/maxresdefault.jpg" width=480></a>
+</div>
+
+*Yes, I only have that one thumbnail face.*
 
 📦 [Download latest version](https://github.com/mikker/LeaderKey.app/releases)
 
