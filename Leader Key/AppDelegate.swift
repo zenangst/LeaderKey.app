@@ -190,4 +190,45 @@ class AppDelegate: NSObject, NSApplicationDelegate,
     guard environment["XCTestSessionIdentifier"] != nil else { return false }
     return true
   }
+
+  // MARK: - URL Scheme Handling
+
+  func application(_ application: NSApplication, open urls: [URL]) {
+    for url in urls {
+      handleURL(url)
+    }
+  }
+
+  private func handleURL(_ url: URL) {
+    guard url.scheme == "leaderkey" else { return }
+
+    show()
+
+    if url.host == "navigate",
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+      let queryItems = components.queryItems,
+      let keysParam = queryItems.first(where: { $0.name == "keys" })?.value
+    {
+      let keys = keysParam.split(separator: ",").map(String.init)
+      processKeys(keys)
+    }
+  }
+
+  private func processKeys(_ keys: [String]) {
+    guard !keys.isEmpty else { return }
+
+    controller.handleKey(keys[0])
+
+    if keys.count > 1 {
+      let remainingKeys = Array(keys.dropFirst())
+
+      var delayMs = 100
+      for key in remainingKeys {
+        delay(delayMs) { [weak self] in
+          self?.controller.handleKey(key)
+        }
+        delayMs += 100
+      }
+    }
+  }
 }
