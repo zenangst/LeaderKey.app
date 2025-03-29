@@ -10,7 +10,7 @@ struct AdvancedPane: View {
   @EnvironmentObject private var config: UserConfig
 
   @Default(.configDir) var configDir
-  @Default(.modifierKeyForGroupSequence) var modifierKeyForGroupSequence
+  @Default(.modifierKeyConfiguration) var modifierKeyConfiguration
   @Default(.autoOpenCheatsheet) var autoOpenCheatsheet
   @Default(.cheatsheetDelayMS) var cheatsheetDelayMS
 
@@ -46,18 +46,35 @@ struct AdvancedPane: View {
       }
 
       Settings.Section(
-        title: "Run Group Modifier", bottomDivider: true
+        title: "Modifier Keys", bottomDivider: true
       ) {
-        Picker("Modifier", selection: $modifierKeyForGroupSequence) {
-          ForEach(ModifierKey.allCases, id: \.self) { key in
-            Text(key.rawValue.capitalized).tag(key)
+        VStack(alignment: .leading, spacing: 16) {
+          HStack {
+            Picker("", selection: $modifierKeyConfiguration) {
+              ForEach(ModifierKeyConfig.allCases) { config in
+                Text(config.description).tag(config)
+              }
+            }
+            .frame(width: 280)
+            .labelsHidden()
           }
-        }.labelsHidden()
-          .pickerStyle(MenuPickerStyle())
-          .frame(width: 120)
-        Text(
-          "When held while pressing a group key, run all actions in that group and its sub-groups."
-        )
+
+          VStack(alignment: .leading, spacing: 8) {
+            Text(
+              "Group Actions: When the modifier key is held while pressing a group key, it runs all actions in that group and its sub-groups."
+            )
+            .font(.callout)
+            .foregroundColor(.secondary)
+          }
+
+          VStack(alignment: .leading, spacing: 8) {
+            Text(
+              "Sticky Mode: When the modifier key is held while triggering an action, Leader Key stays open after the action completes."
+            )
+            .font(.callout)
+            .foregroundColor(.secondary)
+          }
+        }
         .padding(.top, 2)
       }
 

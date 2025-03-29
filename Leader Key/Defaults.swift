@@ -13,8 +13,8 @@ extension Defaults.Keys {
     "showInMenubar", default: true, suite: defaultsSuite)
   static let forceEnglishKeyboardLayout = Key<Bool>(
     "forceEnglishKeyboardLayout", default: false, suite: defaultsSuite)
-  static let modifierKeyForGroupSequence = Key<ModifierKey>(
-    "modifierKeyForGroupSequence", default: .none, suite: defaultsSuite)
+  static let modifierKeyConfiguration = Key<ModifierKeyConfig>(
+    "modifierKeyConfiguration", default: .controlGroupOptionSticky, suite: defaultsSuite)
   static let theme = Key<Theme>(
     "theme", default: .mysteryBox, suite: defaultsSuite)
 
@@ -35,4 +35,20 @@ enum AutoOpenCheatsheetSetting: String, Defaults.Serializable {
   case never
   case always
   case delay
+}
+
+enum ModifierKeyConfig: String, Codable, Defaults.Serializable, CaseIterable, Identifiable {
+  case controlGroupOptionSticky
+  case optionGroupControlSticky
+
+  var id: Self { self }
+
+  var description: String {
+    switch self {
+    case .controlGroupOptionSticky:
+      return "⌃ Group sequences, ⌥ Sticky mode"
+    case .optionGroupControlSticky:
+      return "⌥ Group sequences, ⌃ Sticky mode"
+    }
+  }
 }
